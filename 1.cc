@@ -2,7 +2,10 @@
 
 int main() {
     int depth = 0;
-    while (true) {
+    int i = 1;
+    int positionOfInstructionThatEnteredBasement = 0;
+    bool stop = false;
+    while (!stop) {
         char c;
         scanf("%c", &c);
         switch (c) {
@@ -13,11 +16,22 @@ int main() {
                 --depth;
                 break;
             default:
-                printf("%d\n", depth);
-                return 0;
+                stop = true;
+                break;
         }
+
+        if (depth == -1 && !positionOfInstructionThatEnteredBasement) {
+            positionOfInstructionThatEnteredBasement = i;
+        }
+
+        ++i;
     }
 
-    return 1;
+    printf("Floor: %d\n", depth);
+    if  (positionOfInstructionThatEnteredBasement) {
+        printf("Entered basement at instruction %d\n", positionOfInstructionThatEnteredBasement);
+    }
+
+    return 0;
 }
 
