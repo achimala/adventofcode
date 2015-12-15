@@ -47,14 +47,25 @@ int main() {
     };
 
     Santa santa;
+    Santa newSanta;
+    Santa roboSanta;
 
     std::string line;
     std::getline(std::cin, line);
+    int i = 0;
     for (char c : line) {
         santa.process(c);
+        if (i++ % 2) {
+            newSanta.process(c);
+        } else {
+            roboSanta.process(c);
+        }
     }
 
     std::cout << santa.visited.size() << std::endl;
+    auto set = newSanta.visited;
+    set.insert(roboSanta.visited.begin(), roboSanta.visited.end());
+    std::cout << set.size() << std::endl;
     return 0;
 }
 
