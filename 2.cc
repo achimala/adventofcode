@@ -2,8 +2,7 @@
 #include <sstream>
 #include <vector>
 
-int areaNeeded(std::vector<int>& dimensions) {
-    std::sort(dimensions.begin(), dimensions.end());
+int areaNeeded(const std::vector<int>& dimensions) {
     int area = 0;
     for (size_t i = 0; i < dimensions.size(); ++i) {
         area += 2 * dimensions[i] * dimensions[(i + 1) % dimensions.size()];
@@ -12,9 +11,19 @@ int areaNeeded(std::vector<int>& dimensions) {
     return area + dimensions[0] * dimensions[1];
 }
 
+int ribbonLengthNeeded(const std::vector<int>& dimensions) {
+    int length = 1;
+    for (int i : dimensions) {
+        length *= i;
+    }
+
+    return length + 2 * (dimensions[0] + dimensions[1]);
+}
+
 int main() {
     std::string line;
     int area = 0;
+    int ribbonLength = 0;
     while (std::getline(std::cin, line)) {
         std::stringstream stream(line);
         std::string number;
@@ -23,10 +32,12 @@ int main() {
             dimensions.push_back(std::stoi(number));
         }
 
+        std::sort(dimensions.begin(), dimensions.end());
         area += areaNeeded(dimensions);
+        ribbonLength += ribbonLengthNeeded(dimensions);
     }
 
-    std::cout << area << std::endl;
+    printf("Wrapping paper: %d\nRibbon: %d\n", area, ribbonLength);
     return 0;
 }
 
