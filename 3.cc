@@ -16,30 +16,45 @@ int main() {
         }
     };
 
-    Coordinate position { 0, 0 };
-    std::unordered_set<Coordinate, CoordinateHasher> visited { position };
+    struct Santa {
+        Santa()
+            : position { 0, 0 }
+            , visited { position }
+        {
+        }
+
+        Coordinate position;
+        std::unordered_set<Coordinate, CoordinateHasher> visited;
+
+        void process(char command) {
+            switch (command) {
+                case '^':
+                    --position.y;
+                    break;
+                case 'v':
+                    ++position.y;
+                    break;
+                case '<':
+                    --position.x;
+                    break;
+                case '>':
+                    ++position.x;
+                    break;
+            }
+
+            visited.emplace(position);
+        }
+    };
+
+    Santa santa;
+
     std::string line;
     std::getline(std::cin, line);
     for (char c : line) {
-        switch (c) {
-            case '^':
-                --position.y;
-                break;
-            case 'v':
-                ++position.y;
-                break;
-            case '<':
-                --position.x;
-                break;
-            case '>':
-                ++position.x;
-                break;
-        }
-
-        visited.emplace(position);
+        santa.process(c);
     }
 
-    std::cout << visited.size() << std::endl;
+    std::cout << santa.visited.size() << std::endl;
     return 0;
 }
 
