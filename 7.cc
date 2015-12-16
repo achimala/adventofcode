@@ -7,6 +7,7 @@
 class Node {
 public:
     virtual uint16_t evaluate() const = 0;
+    virtual void reset() {}
 };
 
 class ConstantNode : public Node {
@@ -41,6 +42,10 @@ public:
         return m_cachedValue = m_variables.at(m_name)->evaluate();
     }
 
+    virtual void reset() override {
+        m_hasCachedValue = false;
+    }
+
 private:
     std::string m_name;
     const std::map<std::string, Node*>& m_variables;
@@ -57,6 +62,10 @@ public:
 
     virtual uint16_t evaluate() const override { return ~m_node.evaluate(); }
 
+    virtual void reset() override {
+        m_node.reset();
+    }
+
 private:
     Node& m_node;
 };
@@ -71,6 +80,10 @@ public:
 
     virtual int apply(int, int) const = 0;
     virtual uint16_t evaluate() const override { return apply(m_node1.evaluate(), m_node2.evaluate()); }
+    virtual void reset() override {
+        m_node1.reset();
+        m_node2.reset();
+    }
 
 private:
     Node& m_node1;
@@ -174,6 +187,13 @@ int main() {
         assignVariable(variables, tokens.begin());
     }
 
+    int a = variables["a"]->evaluate();
+    std::cout << a << std::endl;
+    for (auto pair : variables) {
+        pair.second->reset();
+    }
+
+    variables["b"] = new ConstantNode(a);
     std::cout << variables["a"]->evaluate() << std::endl;
     return 0;
 }
