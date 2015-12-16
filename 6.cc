@@ -7,9 +7,11 @@ static bool hasPrefix(std::string string, std::string prefix) {
 
 int main() {
     bool grid[1000][1000];
+    int brightness[1000][1000];
     for (int i = 0; i < 1000; ++i) {
         for (int j = 0; j < 1000; ++j) {
             grid[i][j] = false;
+            brightness[i][j] = 0;
         }
     }
 
@@ -44,12 +46,17 @@ int main() {
                 switch (command) {
                     case Command::On:
                         grid[i][j] = true;
+                        ++brightness[i][j];
                         break;
                     case Command::Off:
                         grid[i][j] = false;
+                        if (brightness[i][j]) {
+                            --brightness[i][j];
+                        }
                         break;
                     case Command::Toggle:
                         grid[i][j] = !grid[i][j];
+                        brightness[i][j] += 2;
                         break;
                 }
             }
@@ -57,15 +64,18 @@ int main() {
     }
 
     int count = 0;
+    int totalBrightness = 0;
     for (int i = 0; i < 1000; ++i) {
         for (int j = 0; j < 1000; ++j) {
             if (grid[i][j]) {
                 ++count;
             }
+            totalBrightness += brightness[i][j];
         }
     }
 
     std::cout << count << std::endl;
+    std::cout << totalBrightness << std::endl;
     return 0;
 }
 
